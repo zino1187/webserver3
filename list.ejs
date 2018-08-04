@@ -1,12 +1,8 @@
-<%
-	//페이징 처리 기법
-	var totalRecord=26;	//총 레코드 수	
-	var pageSize=10;		//페이지당 보여질 레코드 수
-	var totalPage=Math.ceil(totalRecord/pageSize);
-%>
+<%="currentPage is "+currentPage%><br>
 <%="totalRecord is "+totalRecord%><br>
 <%="pageSize is "+pageSize%><br>
 <%="totalPage is "+totalPage%><br>
+<%="blockSize is "+blockSize%><br>
 <!doctype html>
 <html lang="en">
 <head>
@@ -14,7 +10,12 @@
 <title>Document</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
-
+a{text-decoration:none;}
+.numStyle{
+	font-size:25px;
+	color:blue;
+	font-weight:bold;
+}
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
@@ -46,7 +47,18 @@
 			
 			<tr>
 				<td colspan="5" align="center">
-					[1][2][3][4][5]
+					◀
+					<%for(var i=firstPage;i<=lastPage;i++){%>
+						<%if(i>totalPage)break;%>
+						<a  <%if(currentPage==i){%>class="numStyle"<%}%>  href="/list?currentPage=<%=i%>">[<%=i%>]</a>
+					<%}%>
+					
+					<%if(lastPage+1 < totalPage){//더 볼게있다면...%>
+						<a href="/list?currentPage=<%=lastPage+1%>">▶</a>
+					<%}else{%>	
+						<a href="javascript:alert('마지막 페이지입니다')">▶</a>
+					<%}%>
+
 				</td>
 			</tr>
 		</tbody>

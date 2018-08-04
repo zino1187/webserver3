@@ -17,13 +17,37 @@ var app=express();//모듈생성
 app.use(express.static(__dirname)); 
 
 //리스트 요청받기
-app.use("/list", function(request, response){
+app.get("/list", function(request, response){
+	//클라이언트가 전송한 get방식의 데이터를 request 객체에서 끄집어 내자!!
+	console.log(request.query.currentPage);
+
+	//페이징 처리 기법
+	var currentPage=1;		//현재 보고 있는 페이지
+	//사용자가 링크를 누른 경우엔...넘어온 currentPage 값으로 대체!!
+	if(request.query.currentPage != undefined){
+		currentPage = parseInt(request.query.currentPage);
+	}
+	var totalRecord=26;	//총 레코드 수	
+	var pageSize=10;		//페이지당 보여질 레코드 수
+	var totalPage=Math.ceil(totalRecord/pageSize);
+	var blockSize=10;		//블럭당 보여질 페이지 수
+	var firstPage=currentPage-(currentPage-1)%blockSize;
+	var lastPage=firstPage + (blockSize-1);
+
 	fs.readFile("list.ejs","utf-8", function(error, data){
 		if(error){
 			console.log("읽기실패", error);
 		}
 		response.writeHead(200, {"Content-Type":"text/html"});
-		response.end(ejs.render(data));
+		response.end(ejs.render(data, {
+			currentPage:currentPage,
+			totalRecord:totalRecord,
+			pageSize:pageSize,
+			totalPage:totalPage,
+			blockSize:blockSize,
+			firstPage:firstPage,
+			lastPage:lastPage
+		}));
 	});
 });
 
