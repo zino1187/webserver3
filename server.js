@@ -31,8 +31,9 @@ app.get("/list", function(request, response){
 	var pageSize=10;		//페이지당 보여질 레코드 수
 	var totalPage=Math.ceil(totalRecord/pageSize);
 	var blockSize=10;		//블럭당 보여질 페이지 수
-	var firstPage=currentPage-(currentPage-1)%blockSize;
-	var lastPage=firstPage + (blockSize-1);
+	var firstPage=currentPage-(currentPage-1)%blockSize;//블럭당 시작페이지
+	var lastPage=firstPage + (blockSize-1);//블럭당 마지막 페이지
+	var num=totalRecord - ((currentPage-1)*pageSize);//페이지당 시작 게시물 갯수 번호
 
 	fs.readFile("list.ejs","utf-8", function(error, data){
 		if(error){
@@ -46,7 +47,8 @@ app.get("/list", function(request, response){
 			totalPage:totalPage,
 			blockSize:blockSize,
 			firstPage:firstPage,
-			lastPage:lastPage
+			lastPage:lastPage,
+			num:num
 		}));
 	});
 });
