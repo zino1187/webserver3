@@ -54,7 +54,8 @@ app.get("/list", function(request, response){
 			}
 			response.writeHead(200, {"Content-Type":"text/html"});
 			response.end(ejs.render(data, {
-				pm:pm
+				pm:pm,
+				record:result.rows
 			}));
 		});
 	});

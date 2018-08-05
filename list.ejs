@@ -3,6 +3,7 @@
 <%="pageSize is "+pm.pageSize%><br>
 <%="totalPage is "+pm.totalPage%><br>
 <%="blockSize is "+pm.blockSize%><br>
+<%=record%><br>
 <!doctype html>
 <html lang="en">
 <head>
@@ -37,14 +38,19 @@ a{text-decoration:none;}
 			</tr>
 			<%for(var i=0;i<pm.pageSize;i++){%>
 			<%if(pm.num<1)break;%>
+			<%var obj=record[pm.curPos];%>
 			<tr>
 				<td><%=pm.num%></td>
-				<td>홍길동</td>
-				<td>제목입니다</td>
-				<td>2018-08-04</td>
-				<td>34</td>
+				<td><%=obj[1]%></td>
+				<td><%=obj[2]%></td>
+				<td><%=obj[4]%></td>
+				<td><%=obj[5]%></td>
 			</tr>
-			<%pm.num--;%>
+			<%
+				pm.num--;
+				pm.curPos++;
+			%>
+
 			<%}%>
 			
 			<tr>
