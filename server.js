@@ -38,42 +38,23 @@ app.get("/list", function(request, response){
 	//클라이언트가 전송한 get방식의 데이터를 request 객체에서 끄집어 내자!!
 	console.log(request.query.currentPage);
 
-	//사용자가 링크를 누른 경우엔...넘어온 currentPage 값으로 대체!!
-	if(request.query.currentPage != undefined){
-		currentPage = parseInt(request.query.currentPage);
-	}
-
 	conn.execute("select * from notice order by notice_id desc", function(err, result, fields){
 		console.log("execute 안쪽");
-		
 		console.log(result);
+		
+		//변수들을 여기서 나열하지 말고, 대신 페이징 매니져한테 맡기자!!
+		var pm = new PagingManager(request,result.rows);
 
 		if(err){
 			console.log("조회실패!!");
 		}	
-		var currentPage=1;		//현재 보고 있는 페이지
-		var totalRecord=result.rows.length;
-		var pageSize=10;		//페이지당 보여질 레코드 수
-		var totalPage=Math.ceil(totalRecord/pageSize);
-		var blockSize=10;		//블럭당 보여질 페이지 수
-		var firstPage=currentPage-(currentPage-1)%blockSize;//블럭당 시작페이지
-		var lastPage=firstPage + (blockSize-1);//블럭당 마지막 페이지
-		var num=totalRecord - ((currentPage-1)*pageSize);//페이지당 시작 게시물 갯수 번호
-
 		fs.readFile("list.ejs","utf-8", function(error, data){
 			if(error){
 				console.log("읽기실패", error);
 			}
 			response.writeHead(200, {"Content-Type":"text/html"});
 			response.end(ejs.render(data, {
-				currentPage:currentPage,
-				totalRecord:totalRecord,
-				pageSize:pageSize,
-				totalPage:totalPage,
-				blockSize:blockSize,
-				firstPage:firstPage,
-				lastPage:lastPage,
-				num:num
+				pm:pm
 			}));
 		});
 	});

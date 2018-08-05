@@ -1,8 +1,8 @@
-<%="currentPage is "+currentPage%><br>
-<%="totalRecord is "+totalRecord%><br>
-<%="pageSize is "+pageSize%><br>
-<%="totalPage is "+totalPage%><br>
-<%="blockSize is "+blockSize%><br>
+<%="currentPage is "+pm.currentPage%><br>
+<%="totalRecord is "+pm.totalRecord%><br>
+<%="pageSize is "+pm.pageSize%><br>
+<%="totalPage is "+pm.totalPage%><br>
+<%="blockSize is "+pm.blockSize%><br>
 <!doctype html>
 <html lang="en">
 <head>
@@ -35,34 +35,34 @@ a{text-decoration:none;}
 				<th width="15%">작성일</th>
 				<th width="5%">조회수</th>
 			</tr>
-			<%for(var i=0;i<pageSize;i++){%>
-			<%if(num<1)break;%>
+			<%for(var i=0;i<pm.pageSize;i++){%>
+			<%if(pm.num<1)break;%>
 			<tr>
-				<td><%=num%></td>
+				<td><%=pm.num%></td>
 				<td>홍길동</td>
 				<td>제목입니다</td>
 				<td>2018-08-04</td>
 				<td>34</td>
 			</tr>
-			<%num--;%>
+			<%pm.num--;%>
 			<%}%>
 			
 			<tr>
 				<td colspan="5" align="center">
 					
-					<%if(firstPage-1>1){%>
-						<a href="/list?currentPage=<%=firstPage-1%>">◀</a>
+					<%if(pm.firstPage-1>1){%>
+						<a href="/list?currentPage=<%=pm.firstPage-1%>">◀</a>
 					<%}else{%>
 						<a href="javascript:alert('처음페이지 입니다');">◀</a>
 					<%}%>
 
-					<%for(var i=firstPage;i<=lastPage;i++){%>
-						<%if(i>totalPage)break;%>
-						<a  <%if(currentPage==i){%>class="numStyle"<%}%>  href="/list?currentPage=<%=i%>">[<%=i%>]</a>
+					<%for(var i=pm.firstPage;i<=pm.lastPage;i++){%>
+						<%if(i>pm.totalPage)break;%>
+						<a  <%if(pm.currentPage==i){%>class="numStyle"<%}%>  href="/list?currentPage=<%=i%>">[<%=i%>]</a>
 					<%}%>
 					
-					<%if(lastPage+1 < totalPage){//더 볼게있다면...%>
-						<a href="/list?currentPage=<%=lastPage+1%>">▶</a>
+					<%if(pm.lastPage+1 < pm.totalPage){//더 볼게있다면...%>
+						<a href="/list?currentPage=<%=pm.lastPage+1%>">▶</a>
 					<%}else{%>	
 						<a href="javascript:alert('마지막 페이지입니다');">▶</a>
 					<%}%>
