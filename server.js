@@ -9,16 +9,22 @@ var ejs=require("ejs");// 동적 html 생성 모듈...
 var fs=require("fs");//파일 읽어들이는 모듈!!
 var oracledb=require("oracledb");
 var PagingManager=require("./lib/PagingManager.js");
-
+var bodyParser=require("body-parser");
 var app=express();//모듈생성
+var conn;
+//자동 커밋
+oracledb.autoCommit=true; //별도로 명시하지 않아도 쿼리문 수행시
+//자동 커밋( 트랜잭션 확정) - DML:insert, update ,delete
 
 //express 모듈의 최대 장점!! 각종 미들웨어라 불리는 기능들을 지원
 //미들웨어 사용시 use() 로 호출!!
 
 // 어떤효과? - 정적파일들을 일일이 라우팅 시킬 필요없다...
 app.use(express.static(__dirname)); 
+//바디파서의 설정
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());//제이슨 형태로 파라미터 가공!!
 
-var conn;
 
 //오라클 접속 
 oracledb.getConnection({
@@ -63,11 +69,61 @@ app.get("/list", function(request, response){
 	console.log("execute 바깥쪽");
 });
 
+//등록 요청 처리  
+//http 전송 메서드라 불리는 여러 방식이 있다..
+//get / post / delete / input 이 있다... 
+//get : 헤더를 통해 데이터를 전송하는 방식으로 url에 데이터가 노출
+// 되며 데이터량이 많지 않을 경우 사용 
+//post : body를 통해 데이터를 전송하는 방식으로 데이터 노출되지
+//         않으며, (내부적 스트림) 데이터량이 많을 경우 사용...
+//        ex) 로그인 post(보안땜에) , 파일업로드(양이 많아서)..
+app.post("/regist", function(request, response){
+	//전송된 파라미터들부터 받아서 출력해본다!!
+	console.log(request.body);	
+	var sql="insert into notice(notice_id, writer,title,content)";
+	sql+=" values(seq_notice.nextval,'"+request.body.writer+"','"+request.body.title+"','"+request.body.content+"')";
+
+	console.log(sql);
+	
+	//쿼리수행!! insert ,update ,delete (트랜잭션이 걸려있음) 
+	//따라서 commit 하지 않으면 그냥 메모리에만 반영됨..
+	conn.execute(sql, function(error, result){
+		if(error){
+			console.log("에러발생 ㅜㅜ", error);
+		}
+		console.log("insert 결과는 ", result);
+	});
+	
+	//클라이언트에게 리다이렉트 접속 처리 
+	response.statusCode=302;
+	response.setHeader("Location", "/list");
+	response.end();
+});
+
+//상세보기 요청 처리 
+app.use("/detail", function(request, response){
+	console.log("클라이언트가 get방식으로 전송한 파라미터는 ",request.query);
+	var notice_id=request.query.notice_id;
+
+	var sql="select * from notice where notice_id="+notice_id;
+	console.log(sql);
+
+	//쿼리문 수행 
+	conn.execute(sql, function(error, result, fields){
+		if(error){
+			console.log("조회실패",error);
+		}	
+		console.log(result);
+	});
+
+});
+
 var server=http.createServer(app);
 
 server.listen(8888, function(){
 	console.log("웹서버 가동중..");
 });//서버가동
+
 
 
 

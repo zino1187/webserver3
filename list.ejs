@@ -1,9 +1,3 @@
-<%="currentPage is "+pm.currentPage%><br>
-<%="totalRecord is "+pm.totalRecord%><br>
-<%="pageSize is "+pm.pageSize%><br>
-<%="totalPage is "+pm.totalPage%><br>
-<%="blockSize is "+pm.blockSize%><br>
-<%=record%><br>
 <!doctype html>
 <html lang="en">
 <head>
@@ -42,7 +36,7 @@ a{text-decoration:none;}
 			<tr>
 				<td><%=pm.num%></td>
 				<td><%=obj[1]%></td>
-				<td><%=obj[2]%></td>
+				<td><a href="/detail?notice_id=<%=obj[0]%>"><%=obj[2]%></a></td>
 				<td><%=obj[4]%></td>
 				<td><%=obj[5]%></td>
 			</tr>
@@ -73,6 +67,12 @@ a{text-decoration:none;}
 						<a href="javascript:alert('마지막 페이지입니다');">▶</a>
 					<%}%>
 
+				</td>
+			</tr>
+
+			<tr>
+				<td colspan="5" align="right">
+					<a href="/write.html">글쓰기</a>
 				</td>
 			</tr>
 		</tbody>
