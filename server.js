@@ -156,6 +156,32 @@ app.get("/del", function(request, response){
 	});	
 });
 
+//수정 요청 처리!!
+app.post("/edit", function(request, response){
+	//파라미터 4개를 json으로 받아보자!! ( body-parser 능력) 
+	console.log(request.body);
+
+	var notice_id=request.body.notice_id;
+	var writer=request.body.writer;
+	var title=request.body.title;
+	var content=request.body.content;
+
+	var sql="update notice set writer='"+writer+"', title='"+title+"',content='"+content+"'";
+	sql+=" where notice_id="+notice_id;
+	
+	conn.execute(sql, function(error, result){
+		if(error){
+			console.log("수정실패", error);
+		}
+		//수정 후 가야할 곳??? 수정한 내용을 확인할 수있는 상세보기로 다시보내기
+		//클라이언트에게 리다이렉트 접속 처리 
+		response.statusCode=302;
+		response.setHeader("Location", "/detail?notice_id="+notice_id);
+		response.end();
+	});
+
+});
+
 var server=http.createServer(app);
 
 server.listen(8888, function(){

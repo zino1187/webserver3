@@ -34,11 +34,20 @@ function del(){
 		location.href="/del?notice_id=<%=record[0]%>"; // html tag에서 a태그와 동일!!
 	}
 }
+
+function edit(){
+	if(confirm("작성한 내용으로 수정하실래요?")){
+		//서버에 수정을 요청!!
+		form1.action="/edit";//요청url
+		form1.submit();//전송 발생!! 
+	}
+}
 </script>
 </head>
 <body>
 	<div class="wrapper">
 		<form name="form1" method="post">
+			<input type="hidden" name="notice_id" value="<%=record[0]%>">
 			<div>
 				<input type="text" placeholder="작성자입력" name="writer" value="<%=record[1]%>">
 			</div>
@@ -51,7 +60,7 @@ function del(){
 			<div>
 			</div>
 		</form>
-		<button type="button">수정</button>
+		<button type="button" onClick="edit()">수정</button>
 		<button type="button" onClick="del()">삭제</button>
 		<button type="button" onClick="location.href='/list';">목록</button>
 	</div>
