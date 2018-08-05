@@ -44,7 +44,7 @@ app.get("/list", function(request, response){
 	//클라이언트가 전송한 get방식의 데이터를 request 객체에서 끄집어 내자!!
 	console.log(request.query.currentPage);
 
-	conn.execute("select * from notice order by notice_id desc", function(err, result, fields){
+	conn.execute("select notice_id,writer,title,to_char(content),to_char(regdate, 'YYYY-MM-DD'),hit from notice order by notice_id desc", function(err, result, fields){
 		console.log("execute 안쪽");
 		console.log(result);
 		
@@ -105,7 +105,7 @@ app.use("/detail", function(request, response){
 	console.log("클라이언트가 get방식으로 전송한 파라미터는 ",request.query);
 	var notice_id=request.query.notice_id;
 
-	var sql="select * from notice where notice_id="+notice_id;
+	var sql="select notice_id, writer, title, to_char(content),to_char(regdate,'YYYY-MM-DD'),hit  from notice where notice_id="+notice_id;
 	console.log(sql);
 
 	//쿼리문 수행 
@@ -114,6 +114,16 @@ app.use("/detail", function(request, response){
 			console.log("조회실패",error);
 		}	
 		console.log(result);
+		//detail.ejs 에게 정보를 전달해주자!!
+		fs.readFile("detail.ejs", "utf-8", function(err, data){
+			if(err){
+				console.log("파일 읽기실패", err);
+			}
+			response.writeHead(200,{"Content-Type":"text/html"});
+			response.end(ejs.render(data, {
+				record:result.rows[0]
+			}));
+		});
 	});
 
 });

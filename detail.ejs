@@ -1,3 +1,4 @@
+<%=record%>
 <!doctype html>
 <html lang="en">
 <head>
@@ -32,13 +33,13 @@ $(function(){
 	<div class="wrapper">
 		<form name="form1" method="post">
 			<div>
-				<input type="text" placeholder="작성자입력" name="writer">
+				<input type="text" placeholder="작성자입력" name="writer" value="<%=record[1]%>">
 			</div>
 			<div>
-				<input type="text" placeholder="제목입력" name="title">
+				<input type="text" placeholder="제목입력" name="title"  value="<%=record[2]%>">
 			</div>
 			<div>
-				<textarea name="content"></textarea>
+				<textarea name="content"><%=record[3]%></textarea>
 			</div>
 			<div>
 				<button>수정</button>
