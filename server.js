@@ -104,8 +104,16 @@ app.post("/regist", function(request, response){
 app.use("/detail", function(request, response){
 	console.log("클라이언트가 get방식으로 전송한 파라미터는 ",request.query);
 	var notice_id=request.query.notice_id;
+	
+	//조회수 증가
+	var sql="update notice set hit=hit+1 where notice_id="+notice_id;
+	conn.execute(sql, function(error, result){
+		if(error){
+			console.log(error);
+		}
+	});
 
-	var sql="select notice_id, writer, title, to_char(content),to_char(regdate,'YYYY-MM-DD'),hit  from notice where notice_id="+notice_id;
+	sql="select notice_id, writer, title, to_char(content),to_char(regdate,'YYYY-MM-DD'),hit  from notice where notice_id="+notice_id;
 	console.log(sql);
 
 	//쿼리문 수행 
@@ -126,6 +134,26 @@ app.use("/detail", function(request, response){
 		});
 	});
 
+});
+
+//삭제 요청 처리 
+//넘겨받을 파라미터가 단순한 문자 하나이므로 데이터량이 많지
+//않고, 보안도 중요하지 않으므로 get방식으로 받겠다!!
+app.get("/del", function(request, response){
+	var notice_id=request.query.notice_id; //json 객체 {notice_id: '47'}
+
+	var sql="delete from notice where notice_id="+notice_id;
+	console.log(sql);
+	
+	conn.execute(sql, function(error, result){
+		if(error){
+			console.log("삭제실패",error);
+		}
+		//클라이언트에게 리다이렉트 접속 처리 
+		response.statusCode=302;
+		response.setHeader("Location", "/list");
+		response.end();
+	});	
 });
 
 var server=http.createServer(app);

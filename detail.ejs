@@ -27,6 +27,13 @@ $(function(){
 	$("button").click(function(){
 	});
 });
+
+function del(){
+	if(confirm("삭제하시겠습니까?")){
+		//서버에 삭제를 요청!!
+		location.href="/del?notice_id=<%=record[0]%>"; // html tag에서 a태그와 동일!!
+	}
+}
 </script>
 </head>
 <body>
@@ -42,11 +49,11 @@ $(function(){
 				<textarea name="content"><%=record[3]%></textarea>
 			</div>
 			<div>
-				<button>수정</button>
-				<button>삭제</button>
-				<button>목록</button>
 			</div>
 		</form>
+		<button type="button">수정</button>
+		<button type="button" onClick="del()">삭제</button>
+		<button type="button" onClick="location.href='/list';">목록</button>
 	</div>
 </body>
 </html>
