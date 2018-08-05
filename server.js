@@ -8,6 +8,7 @@ var express=require("express");
 var ejs=require("ejs");// 동적 html 생성 모듈...
 var fs=require("fs");//파일 읽어들이는 모듈!!
 var oracledb=require("oracledb");
+var PagingManager=require("./lib/PagingManager.js");
 
 var app=express();//모듈생성
 
@@ -43,6 +44,10 @@ app.get("/list", function(request, response){
 	}
 
 	conn.execute("select * from notice order by notice_id desc", function(err, result, fields){
+		console.log("execute 안쪽");
+		
+		console.log(result);
+
 		if(err){
 			console.log("조회실패!!");
 		}	
@@ -72,6 +77,8 @@ app.get("/list", function(request, response){
 			}));
 		});
 	});
+
+	console.log("execute 바깥쪽");
 });
 
 var server=http.createServer(app);
