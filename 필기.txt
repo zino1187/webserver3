@@ -1,0 +1,70 @@
+SQL> --트랜잭션
+SQL> --세부실행 업무가 모두 성공해야 전체를 성공으로 간주하는 논리적
+SQL> --수행단위
+SQL> select writer from notice;
+
+WRITER                                                                          
+------------------------------------------------------------                    
+w                                                                               
+BATMAN                                                                          
+w                                                                               
+민진호                                                                          
+
+SQL> insert into notice(writer) values('수퍼맨');
+insert into notice(writer) values('수퍼맨')
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("NODE"."NOTICE"."NOTICE_ID") 
+
+
+SQL> insert into notice(notice_id,writer) values(seq_notice.nextval,'수퍼맨');
+
+1 row created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> update notice set writer='민진호';
+
+5 rows updated.
+
+SQL> select writer from notice;
+
+WRITER                                                                          
+------------------------------------------------------------                    
+민진호                                                                          
+민진호                                                                          
+민진호                                                                          
+민진호                                                                          
+민진호                                                                          
+
+SQL> update notice set writer='강아지';
+
+5 rows updated.
+
+SQL> select writer from notice;
+
+WRITER                                                                          
+------------------------------------------------------------                    
+강아지                                                                          
+강아지                                                                          
+강아지                                                                          
+강아지                                                                          
+강아지                                                                          
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> select writer from notice;
+
+WRITER                                                                          
+------------------------------------------------------------                    
+w                                                                               
+BATMAN                                                                          
+w                                                                               
+민진호                                                                          
+수퍼맨                                                                          
+
+SQL> spool off

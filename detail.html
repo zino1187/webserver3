@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>글쓰기</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+.wrapper{
+	width:500px;
+	border:2px solid blue;
+	background:yellow;
+	margin:auto;
+	text-align:center;
+}
+.wrapper input, textarea{
+	width:98%;
+	margin:2px 0px;
+}
+textarea{
+	height:300px;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+$(function(){
+	$("button").click(function(){
+		regist();
+	});
+});
+
+function regist(){
+	form1.action="/regist";//등록 요청
+	form1.submit();//전송!!
+}
+
+</script>
+</head>
+<body>
+	<div class="wrapper">
+		<form name="form1" method="post">
+			<div>
+				<input type="text" placeholder="작성자입력" name="writer">
+			</div>
+			<div>
+				<input type="text" placeholder="제목입력" name="title">
+			</div>
+			<div>
+				<textarea name="content"></textarea>
+			</div>
+			<div>
+				<button>등록</button>
+			</div>
+		</form>
+	</div>
+</body>
+</html>
